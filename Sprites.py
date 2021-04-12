@@ -5,32 +5,59 @@ vec = pg.math.Vector2
 
 
 class Player(pg.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, game):
         pg.sprite.Sprite.__init__(self)
-        self.image = pg.Surface((30, 40)) # sprite is 30 pixels wide and 40 pixels long
-        self.image.fill(BLUE) # makes the sprite blue thanks to the settings file imported
+        self.game = game
+        self.image = pg.Surface((30, 40)) # Sprite is 30 pixels wide and 40 pixels long
+        self.image.fill(BLUE) # Makes the sprite blue thanks to the settings file imported
         self.rect = self.image.get_rect()
         self.rect.center = (WIDTH/2, HEIGHT/2)
         self.pos = vec(WIDTH/2, HEIGHT/2)
-        self.vel = vec(0, 0)
-        self.acc = vec(0, 0)
+        self.vel = vec(0, 0) # Sets the velocity in the x y coordinates
+        self.acc = vec(0, 0) # Sets the acceleration in the xy coordinates
+
+
+    def jump(self):
+
+        # Check for when the player is on a platform so they only jump once
+        self.rect.x += 1
+        collision = pg.sprite.spritecollide(self, self.game.platforms, False)
+        self.rect.x -= 1
+
+        if collision:
+            self.vel.y = -15
+        if not collision:
+            self.vel.y = -7
+
+
+    # After the player jumps they will be able to float for a limited amount of time before descending
+
+
 
 
     def update(self):
-        self.acc = vec(0, 0)
+        self.acc = vec(0, PLAYER_GRAVITY)
         keys = pg.key.get_pressed()
 
         # Checks for input
         if keys[pg.K_LEFT]:
-            self.acc.x = -PLAYER_ACC
+            self.acc.x = -PLAYER_HOR_ACC
         if keys[pg.K_RIGHT]:
-            self.acc.x = PLAYER_ACC
+            self.acc.x = PLAYER_HOR_ACC
 
-        # Friction applied to the player
-        self.acc += self.vel * PLAYER_FRICTION
+        #if keys[pg.K_SPACE]:
+            #self.acc.y = -PLAYER_GRAVITY
+        #if not keys[pg.K_SPACE]:
+            #self.acc.y = PLAYER_GRAVITY
+
+        # Friction applied to the player while they are moving horizontally
+        self.acc.x += self.vel.x * PLAYER_FRICTION
+
 
         self.vel += self.acc
         self.pos += self.vel + 0.5 * self.acc
+
+        #Gravity
 
         # When the player reaches the border of the screen they will be back on the other side
         if self.pos.x > WIDTH:
@@ -38,5 +65,15 @@ class Player(pg.sprite.Sprite):
         if self.pos.x < 0:
             self.pos.x = WIDTH
 
-        # Makes sure that the centre of the sprite is in the same place as the current position
-        self.rect.center = self.pos
+        # Makes sure that the position of the player will be at the bottom in the middle of the player
+        self.rect.midbottom = self.pos
+
+
+class Platforms(pg.sprite.Sprite):
+    def __init__(self, x, y, width, height):
+        pg.sprite.Sprite.__init__(self)
+        self.image = pg.Surface((width, height))
+        self.image.fill(BLUE)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
