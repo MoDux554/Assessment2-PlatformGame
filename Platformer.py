@@ -1,7 +1,10 @@
-#Game Template
+# Game Template
 import pygame as pg
 import random
-from PlatformerSettings import*
+from PlatformerSettings import *
+from Sprites import *
+
+
 
 class Game():
     def __init__(self):
@@ -14,12 +17,15 @@ class Game():
         self.gameRunning = True
 
     def new(self):
-    #starting a new game
-        self.sprites = pg.sprite.Group()
+        # Starting a new game
+        self.all_sprites = pg.sprite.Group()
+        # Creating a new player sprite from the sprites file
+        self.player = Player()
+        self.all_sprites.add(self.player)
         self.run()
 
     def run(self):
-    #when the game is running/game loop
+        # when the game is running/game loop
         self.playing = True
         while self.playing:
             self.clock.tick(FPS)
@@ -27,25 +33,23 @@ class Game():
             self.update()
             self.draw()
 
-
     def update(self):
-    #for the gameto update
-        self.sprites.update()
+        # For the game to update
+        self.all_sprites.update()
 
     def event(self):
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 if self.playing:
                     self.playing = False
-                self.gameRunning = False #stops the game running loop and ends the game
+                self.gameRunning = False  # stops the game running loop and ends the game
 
     def draw(self):
         # drawing on the screen
         self.screen.fill(BLACK)
-        self.sprites.draw(self.screen)
-        # this comes after drawing all the time
+        self.all_sprites.draw(self.screen)
+        # This comes after drawing all the time
         pg.display.flip()
-
 
     def game_start_screen(self):
         pass
@@ -56,8 +60,7 @@ class Game():
 
 game = Game()
 game.game_start_screen()
-while game.gameRunning :
+while game.gameRunning:
     game.new()
     game.game_start_screen()
 pg.quit()
-
