@@ -53,6 +53,15 @@ class Game():
                 self.player.pos.y = collision[0].rect.top
                 self.player.vel.y = 0
 
+        if self.player.rect.right >= 2 * WIDTH / 3:
+            self.player.pos.x -= max(abs(self.player.vel.x), 2)
+            for plat in self.platforms:
+                plat.rect.right -= max(abs(self.player.vel.x), 2)
+        if self.player.rect.left <= WIDTH - 300:
+            self.player.pos.x += max(abs(self.player.vel.x), 2)
+            for plat in self.platforms:
+                plat.rect.right += max(abs(self.player.vel.x), 2)
+
 
     def event(self):
         for event in pg.event.get():

@@ -1,6 +1,6 @@
 # Settings for the game like dimensions and colour
-WIDTH = 480
-HEIGHT = 600
+WIDTH = 1280
+HEIGHT = 720
 FPS = 60
 TITLE = "BalloonPlatform"
 
@@ -14,7 +14,9 @@ PLAYER_FRICTION = -0.1
 
 # Starting Platforms / List of Platforms
 PLATFORM_LIST = [(0, HEIGHT - 60, WIDTH - 300, 40),
-                 (250, HEIGHT -200, 200, 15)]
+                 (250, HEIGHT -200, 200, 15),
+                 (700, HEIGHT - 250, 200, 15),
+                 (1300, HEIGHT - 350, 200, 15)]
 
 
 
