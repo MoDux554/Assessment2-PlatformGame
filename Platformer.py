@@ -23,9 +23,12 @@ class Game():
         # Creating a new player sprite from the sprites file
         self.player = Player(self)
         self.all_sprites.add(self.player)
-        plat1 = Platforms(0, HEIGHT - 60, WIDTH, 40)
-        self.all_sprites.add(plat1)
-        self.platforms.add(plat1)
+
+        # Adds the platforms from the list in Platformer Settings
+        for plat in PLATFORM_LIST:
+            p = Platforms(*plat)
+            self.all_sprites.add(p)
+            self.platforms.add(p)
         self.run()
 
     def run(self):
@@ -41,12 +44,14 @@ class Game():
         # For the game to update
         self.all_sprites.update()
 
-        #Collision check between the player and platforms
-        collision = pg.sprite.spritecollide(self.player, self.platforms, False)
-        if collision:
-            # the player's y position will be set to the top part of the platform
-            self.player.pos.y = collision[0].rect.top
-            self.player.vel.y = 0
+        # Prevents the player from clipping through platforms underneath
+        if self.player.vel.y > 0:
+            # Collision check between the player and platforms
+            collision = pg.sprite.spritecollide(self.player, self.platforms, False)
+            if collision:
+                # the player's y position will be set to the top part of the platform
+                self.player.pos.y = collision[0].rect.top
+                self.player.vel.y = 0
 
 
     def event(self):

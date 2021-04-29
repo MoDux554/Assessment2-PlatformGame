@@ -12,23 +12,17 @@ class Player(pg.sprite.Sprite):
         self.image.fill(BLUE) # Makes the sprite blue thanks to the settings file imported
         self.rect = self.image.get_rect()
         self.rect.center = (WIDTH/2, HEIGHT/2)
-        self.pos = vec(WIDTH/2, HEIGHT/2)
+        self.pos = vec(WIDTH-400, HEIGHT-250)
         self.vel = vec(0, 0) # Sets the velocity in the x y coordinates
         self.acc = vec(0, 0) # Sets the acceleration in the xy coordinates
 
 
     def jump(self):
 
-        # Check for when the player is on a platform so they only jump once
+        #Check for when the player is on a platform so they only jump once
         self.rect.x += 1
         collision = pg.sprite.spritecollide(self, self.game.platforms, False)
         self.rect.x -= 1
-
-        if collision:
-            self.vel.y = -15
-        if not collision:
-            self.vel.y = -7
-
 
     # After the player jumps they will be able to float for a limited amount of time before descending
 
@@ -36,7 +30,7 @@ class Player(pg.sprite.Sprite):
 
 
     def update(self):
-        self.acc = vec(0, PLAYER_GRAVITY)
+        self.acc = vec(0, PLAYER_ASCENDING)
         keys = pg.key.get_pressed()
 
         # Checks for input
@@ -45,10 +39,10 @@ class Player(pg.sprite.Sprite):
         if keys[pg.K_RIGHT]:
             self.acc.x = PLAYER_HOR_ACC
 
-        #if keys[pg.K_SPACE]:
-            #self.acc.y = -PLAYER_GRAVITY
-        #if not keys[pg.K_SPACE]:
-            #self.acc.y = PLAYER_GRAVITY
+        if keys[pg.K_SPACE]:
+            self.acc.y = -PLAYER_ASCENDING
+        if not keys[pg.K_SPACE]:
+            self.acc.y = PLAYER_ASCENDING * 5
 
         # Friction applied to the player while they are moving horizontally
         self.acc.x += self.vel.x * PLAYER_FRICTION
