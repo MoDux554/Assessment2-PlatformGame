@@ -63,6 +63,27 @@ class Game():
                 plat.rect.right += max(abs(self.player.vel.x), 2)
 
 
+        '''while len (self.platforms) < 10:
+            width = random.randrange(50,100)
+            p = Platforms(random.randrange(0, WIDTH - width),
+                random.randrange(-75,-30),
+                width, 20)
+            self.platforms.add(p)
+            self.all_sprites.add(p)'''
+
+        # Game Over Condition
+        if self.player.rect.bottom > HEIGHT:
+            for sprite in self.all_sprites:
+                # makes it look like the platforms are scrolling down
+                sprite.rect.y -= max(self.player.vel.y, 10)
+                #removes all the sprites
+                if sprite.rect.bottom < 0:
+                    sprite.kill()
+        #restarts the game
+        if len (self.platforms) == 0:
+            self.playing = False
+
+
     def event(self):
         for event in pg.event.get():
             if event.type == pg.QUIT:
