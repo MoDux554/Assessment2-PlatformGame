@@ -1,8 +1,9 @@
 # Settings for the game like dimensions and colour
+TITLE = "BalloonPlatform"
 WIDTH = 1280
 HEIGHT = 720
 FPS = 60
-TITLE = "BalloonPlatform"
+FONT_NAME = 'arial'
 
 
 # Player Properties
@@ -28,3 +29,4 @@ GREY = (128, 128, 128)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
+

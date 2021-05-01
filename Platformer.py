@@ -15,6 +15,7 @@ class Game():
         pg.display.set_caption(TITLE)
         self.clock = pg.time.Clock()
         self.gameRunning = True
+        self.font_name = pg.font.match_font(FONT_NAME)
 
     def new(self):
         # Starting a new game
@@ -63,14 +64,6 @@ class Game():
                 plat.rect.right += max(abs(self.player.vel.x), 2)
 
 
-        '''while len (self.platforms) < 10:
-            width = random.randrange(50,100)
-            p = Platforms(random.randrange(0, WIDTH - width),
-                random.randrange(-75,-30),
-                width, 20)
-            self.platforms.add(p)
-            self.all_sprites.add(p)'''
-
         # Game Over Condition
         if self.player.rect.bottom > HEIGHT:
             for sprite in self.all_sprites:
@@ -102,10 +95,35 @@ class Game():
         pg.display.flip()
 
     def game_start_screen(self):
-        pass
+        self.screen.fill(GREY)
+        self.drawtext(TITLE, 48, WHITE, WIDTH / 2, HEIGHT / 4)
+        self.drawtext("Use left and right arrow keys for movement.", 22, WHITE, WIDTH/2, HEIGHT/ 2)
+        self.drawtext("Press and hold the space bar to float for a limited amount of time.", 22, WHITE,WIDTH/ 2, HEIGHT / 3)
+        self.drawtext("Press any key to play.",22, WHITE, WIDTH / 2, HEIGHT *3 /4)
+        pg.display.flip()
+        self.waitforinput()
+
+    def waitforinput(self):
+        waiting = True
+        while waiting:
+            self.clock.tick(FPS)
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    waiting = False
+                    self.gameRunning = False
+                if event.type == pg.KEYUP:
+                    waiting = False
+
 
     def gameover_screen(self):
         pass
+
+    def drawtext(self, text, size, colour, x, y):
+        font = pg.font.Font(self.font_name, size)
+        text_surface = font.render(text, True, colour)
+        text_rect = text_surface.get_rect()
+        text_rect.midtop = (x, y)
+        self.screen.blit(text_surface, text_rect)
 
 
 game = Game()
