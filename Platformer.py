@@ -103,6 +103,17 @@ class Game():
         pg.display.flip()
         self.waitforinput()
 
+    def gameover_screen(self):
+        # Makes sure that when the the player quits the game, the window is closed and not going to either screen.
+        if not self.gameRunning:
+            return
+        self.screen.fill(GREY)
+        self.drawtext("GAME OVER", 48, WHITE, WIDTH / 2, HEIGHT / 4)
+        self.drawtext("Press any key to restart.", 22, WHITE, WIDTH / 2, HEIGHT * 3 / 4)
+        pg.display.flip()
+        self.waitforinput()
+
+
     def waitforinput(self):
         waiting = True
         while waiting:
@@ -115,8 +126,7 @@ class Game():
                     waiting = False
 
 
-    def gameover_screen(self):
-        pass
+
 
     def drawtext(self, text, size, colour, x, y):
         font = pg.font.Font(self.font_name, size)
@@ -130,5 +140,6 @@ game = Game()
 game.game_start_screen()
 while game.gameRunning:
     game.new()
-    game.game_start_screen()
+    game.gameover_screen()
 pg.quit()
+
