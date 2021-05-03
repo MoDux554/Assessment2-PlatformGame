@@ -42,7 +42,8 @@ class Game():
         self.all_sprites = pg.sprite.Group()
         self.platforms = pg.sprite.Group()
         self.spikes = pg.sprite.Group()
-        self.airboosters = pg.sprite.Group()
+        self.h_airboosters = pg.sprite.Group()
+        self.v_airboosters = pg.sprite.Group()
         # Creating a new player sprite from the sprites file
         self.player = Player(self)
         self.all_sprites.add(self.player)
@@ -59,10 +60,15 @@ class Game():
             self.all_sprites.add(bp)
             self.spikes.add(bp)
 
-        for b in BOOSTER_PLACEMENTS:
-            boost = Booster(*b)
-            self.all_sprites.add(boost)
-            self.airboosters.add(boost)
+        for hb in HBOOSTER_PLACEMENTS:
+            hboost = HBooster(*hb)
+            self.all_sprites.add(hboost)
+            self.h_airboosters.add(hboost)
+
+        for vb in VBOOSTER_PLACEMENTS:
+            vboost = VBooster(*vb)
+            self.all_sprites.add(vboost)
+            self.v_airboosters.add(vboost)
         self.run()
 
     def run(self):
@@ -84,7 +90,9 @@ class Game():
             # Collision check between the player and platforms
             plat_collision = pg.sprite.spritecollide(self.player, self.platforms, False)
             bad_plat_collision = pg.sprite.spritecollideany(self.player, self.spikes)
-            booster_collision = pg.sprite.spritecollide(self.player, self.airboosters, False)
+            h_booster_collision = pg.sprite.spritecollide(self.player, self.h_airboosters, False)
+            v_booster_collision = pg.sprite.spritecollide(self.player, self.v_airboosters, False)
+
             if plat_collision:
                 # the player's y position will be set to the top part of the platform
                 self.player.pos.y = plat_collision[0].rect.top
@@ -92,10 +100,17 @@ class Game():
             if bad_plat_collision:
                 # Transition to Game Over screen
                 self.playing = False
-            if booster_collision:
-                self.player.vel.x += 8
-                if self.player.vel.x == 16:
+            if h_booster_collision:
+                self.player.vel.x += 16
+                self.player.vel.y -= 2.5
+                if self.player.vel.x == 48:
                     self.player.vel.x = 0
+            if v_booster_collision:
+                self.player.vel.y += 8
+                self.player.vel.x = 0
+                if self.player.vel.y == 16:
+                    self.player.vel.y = 0
+
 
 
 
@@ -106,16 +121,20 @@ class Game():
                 plat.rect.right -= max(abs(self.player.vel.x), 2)
             for bad_plat in self.spikes:
                 bad_plat.rect.right -= max(abs(self.player.vel.x), 2)
-            for boosters in self.airboosters:
-                boosters.rect.right -= max(abs(self.player.vel.x), 2)
+            for hboosters in self.h_airboosters:
+                hboosters.rect.right -= max(abs(self.player.vel.x), 2)
+            for vboosters in self.v_airboosters:
+                vboosters.rect.right -= max(abs(self.player.vel.x), 2)
         if self.player.rect.left <= WIDTH - 300:
             self.player.pos.x += max(abs(self.player.vel.x), 2)
             for plat in self.platforms:
                 plat.rect.right += max(abs(self.player.vel.x), 2)
             for bad_plat in self.spikes:
                 bad_plat.rect.right += max(abs(self.player.vel.x), 2)
-            for boosters in self.airboosters:
-                boosters.rect.right += max(abs(self.player.vel.x), 2)
+            for hboosters in self.h_airboosters:
+                hboosters.rect.right += max(abs(self.player.vel.x), 2)
+            for vboosters in self.v_airboosters:
+                vboosters.rect.right += max(abs(self.player.vel.x), 2)
 
 
 
