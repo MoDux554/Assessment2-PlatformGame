@@ -11,10 +11,10 @@ class Player(pg.sprite.Sprite):
         pg.sprite.Sprite.__init__(self)
         self.game = game
         self.image = pg.Surface((30, 40)) # Sprite is 30 pixels wide and 40 pixels long
-        self.image.fill(BLUE) # Makes the sprite blue thanks to the settings file imported
+        self.image.fill(WHITE) # Makes the sprite blue thanks to the settings file imported
         self.rect = self.image.get_rect()
         self.rect.center = (WIDTH/2, HEIGHT/2)
-        self.pos = vec(WIDTH-400, HEIGHT-250)
+        self.pos = vec(0, 150)
         self.vel = vec(0, 0) # Sets the velocity in the x y coordinates
         self.acc = vec(0, 0) # Sets the acceleration in the xy coordinates
         self.jumpenergy = 0
@@ -54,11 +54,11 @@ class Player(pg.sprite.Sprite):
             self.acc.x = PLAYER_HOR_ACC
 
 
-        if keys[pg.K_SPACE] and self.jumpenergy < 30 and self.canjump:
+        if keys[pg.K_SPACE] and self.jumpenergy < 15 and self.canjump:
             self.acc.y = -PLAYER_ASCENDING
             self.jumpenergy += 1
 
-        if self.jumpenergy == 30:
+        if self.jumpenergy == 15:
             self.canjump = False
 
         if self.jumpenergy == 0 and self.canjump == False:
@@ -106,6 +106,11 @@ class BadPlatforms(pg.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
-
-
-
+class Booster(pg.sprite.Sprite):
+    def __init__(self, x, y, width, height):
+        pg.sprite.Sprite.__init__(self)
+        self.image = pg.Surface((width, height))
+        self.image.fill(RED)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
