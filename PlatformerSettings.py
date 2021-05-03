@@ -16,6 +16,7 @@ PLAYER_GRAVITY = 0.2
 PLAYER_FRICTION = -0.1
 
 
+
 # Starting Platforms / List of Platforms
 NORMAL_PLATFORM_LIST = [(0, HEIGHT - 60, 150, 40),
                  (250, HEIGHT -200, 200, 15),
@@ -56,9 +57,7 @@ HBOOSTER_PLACEMENTS = [(2500,HEIGHT - 550, 20, 20),
 
 VBOOSTER_PLACEMENTS =[(4200, HEIGHT - 300, 20, 20)]
 
-
-
-
+V2BOOSTER_PLACEMENTS =  [(5400, HEIGHT - 150,20, 20)]
 
 
 

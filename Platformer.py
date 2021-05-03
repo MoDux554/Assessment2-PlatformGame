@@ -44,6 +44,7 @@ class Game():
         self.spikes = pg.sprite.Group()
         self.h_airboosters = pg.sprite.Group()
         self.v_airboosters = pg.sprite.Group()
+        self.v2_airboosters = pg.sprite.Group()
         # Creating a new player sprite from the sprites file
         self.player = Player(self)
         self.all_sprites.add(self.player)
@@ -60,6 +61,7 @@ class Game():
             self.all_sprites.add(bp)
             self.spikes.add(bp)
 
+
         for hb in HBOOSTER_PLACEMENTS:
             hboost = HBooster(*hb)
             self.all_sprites.add(hboost)
@@ -69,6 +71,11 @@ class Game():
             vboost = VBooster(*vb)
             self.all_sprites.add(vboost)
             self.v_airboosters.add(vboost)
+
+        for v2b in V2BOOSTER_PLACEMENTS:
+            v2boost = V2Booster(*v2b)
+            self.all_sprites.add(v2boost)
+            self.v2_airboosters.add(v2boost)
         self.run()
 
     def run(self):
@@ -92,6 +99,7 @@ class Game():
             bad_plat_collision = pg.sprite.spritecollideany(self.player, self.spikes)
             h_booster_collision = pg.sprite.spritecollide(self.player, self.h_airboosters, False)
             v_booster_collision = pg.sprite.spritecollide(self.player, self.v_airboosters, False)
+            v2_booster_collision = pg.sprite.spritecollide(self.player, self.v2_airboosters, False)
 
             if plat_collision:
                 # the player's y position will be set to the top part of the platform
@@ -110,6 +118,11 @@ class Game():
                 self.player.vel.x = 0
                 if self.player.vel.y == 16:
                     self.player.vel.y = 0
+            if v2_booster_collision:
+                self.player.vel.y -= -8
+                self.player.vel.x = 0
+                if self.player.vel.y == -16:
+                    self.player.vel.y = 0
 
 
 
@@ -125,6 +138,9 @@ class Game():
                 hboosters.rect.right -= max(abs(self.player.vel.x), 2)
             for vboosters in self.v_airboosters:
                 vboosters.rect.right -= max(abs(self.player.vel.x), 2)
+            for v2boosters in self.v2_airboosters:
+                v2boosters.rect.right -= max(abs(self.player.vel.x), 2)
+
         if self.player.rect.left <= WIDTH - 300:
             self.player.pos.x += max(abs(self.player.vel.x), 2)
             for plat in self.platforms:
@@ -135,6 +151,8 @@ class Game():
                 hboosters.rect.right += max(abs(self.player.vel.x), 2)
             for vboosters in self.v_airboosters:
                 vboosters.rect.right += max(abs(self.player.vel.x), 2)
+            for v2boosters in self.v2_airboosters:
+                v2boosters.rect.right += max(abs(self.player.vel.x), 2)
 
 
 
