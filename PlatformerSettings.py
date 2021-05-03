@@ -17,11 +17,18 @@ PLAYER_FRICTION = -0.1
 
 
 # Starting Platforms / List of Platforms
-PLATFORM_LIST = [(0, HEIGHT - 60, WIDTH - 300, 40),
+NORMAL_PLATFORM_LIST = [(0, HEIGHT - 60, WIDTH - 300, 40),
                  (250, HEIGHT -200, 200, 15),
                  (700, HEIGHT - 250, 200, 15),
                  (1300, HEIGHT - 350, 200, 15),
                  (1600, HEIGHT -100, 200, 20)]
+
+BAD_PLATFORM_LIST = [(0, HEIGHT/2, WIDTH/ 5, 40 )]
+
+
+
+SPIKES_LIST = [(250, HEIGHT - 75, 200, 20)]
+
 
 
 

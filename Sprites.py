@@ -5,10 +5,6 @@ vec = pg.math.Vector2
 import time
 
 
-class SpriteSheet:
-    def __init__(self, filname):
-        pass
-
 
 class Player(pg.sprite.Sprite):
     def __init__(self, game):
@@ -100,6 +96,16 @@ class Platforms(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+
+class BadPlatforms(pg.sprite.Sprite):
+    def __init__(self, x, y, width, height):
+        pg.sprite.Sprite.__init__(self)
+        self.image = pg.Surface((width, height))
+        self.image.fill(BLACK)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
 
 
 

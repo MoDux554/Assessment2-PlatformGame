@@ -23,22 +23,39 @@ class Game():
 
 
     def load_data(self):
-        # Loading data, graphis, sound, etc
         pass
+        #self.dir = path.dirname(__file__)
+        #img_dir = open(path.join(self.dir, 'images'))
+        #with open(path.join(self.dir, HIGHSCORE_FILE), 'r') as f:
+            #try:
+                # When there is something in the file
+                #self.highscore = int(f.read())
+            #except:
+                # When there's nothing in the file
+                #self.highscore = 0
+
+
 
     def new(self):
         # Starting a new game
+        self.score = 0
         self.all_sprites = pg.sprite.Group()
         self.platforms = pg.sprite.Group()
+        self.spikes = pg.sprite.Group()
         # Creating a new player sprite from the sprites file
         self.player = Player(self)
         self.all_sprites.add(self.player)
 
         # Adds the platforms from the list in Platformer Settings
-        for plat in PLATFORM_LIST:
+        for plat in NORMAL_PLATFORM_LIST:
             p = Platforms(*plat)
             self.all_sprites.add(p)
             self.platforms.add(p)
+
+        for n_plat in BAD_PLATFORM_LIST:
+            bp = BadPlatforms(*n_plat)
+            self.all_sprites.add(bp)
+            self.spikes.add(bp)
         self.run()
 
     def run(self):
@@ -57,11 +74,15 @@ class Game():
         # Prevents the player from clipping through platforms underneath
         if self.player.vel.y > 0:
             # Collision check between the player and platforms
-            collision = pg.sprite.spritecollide(self.player, self.platforms, False)
-            if collision:
+            plat_collision = pg.sprite.spritecollide(self.player, self.platforms, False)
+            bad_plat_collision = pg.sprite.spritecollide(self.player, self.spikes, False)
+            if plat_collision:
                 # the player's y position will be set to the top part of the platform
-                self.player.pos.y = collision[0].rect.top
+                self.player.pos.y = plat_collision[0].rect.top
                 self.player.vel.y = 0
+            if bad_plat_collision:
+                # Transition to Game Over screen
+                self.playing = False
 
 
         # Horizontal Scrolling
@@ -69,10 +90,14 @@ class Game():
             self.player.pos.x -= max(abs(self.player.vel.x), 2)
             for plat in self.platforms:
                 plat.rect.right -= max(abs(self.player.vel.x), 2)
+            for bad_plat in self.spikes:
+                bad_plat.rect.right -= max(abs(self.player.vel.x), 2)
         if self.player.rect.left <= WIDTH - 300:
             self.player.pos.x += max(abs(self.player.vel.x), 2)
             for plat in self.platforms:
                 plat.rect.right += max(abs(self.player.vel.x), 2)
+            for bad_plat in self.spikes:
+                bad_plat.rect.right += max(abs(self.player.vel.x), 2)
 
 
 
@@ -107,6 +132,7 @@ class Game():
         # drawing on the screen
         self.screen.fill(GREY)
         self.all_sprites.draw(self.screen)
+        self.drawtext(str(self.score), 22, WHITE, WIDTH /2, HEIGHT / 15)
         # This comes after drawing all the time
         pg.display.flip()
 
