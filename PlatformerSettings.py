@@ -4,12 +4,15 @@ WIDTH = 1280
 HEIGHT = 720
 FPS = 60
 FONT_NAME = 'arial'
+HIGHSCORE_FILE = 'highscore.txt'
+
+SPRITES = "spritesheet_jumper.png"
 
 
 # Player Properties
 PLAYER_HOR_ACC = 0.3
 PLAYER_ASCENDING = 0.2
-PLAYER_GRAVITY = 0.2
+PLAYER_GRAVITY = 0.005
 PLAYER_FRICTION = -0.1
 
 
@@ -18,7 +21,7 @@ PLATFORM_LIST = [(0, HEIGHT - 60, WIDTH - 300, 40),
                  (250, HEIGHT -200, 200, 15),
                  (700, HEIGHT - 250, 200, 15),
                  (1300, HEIGHT - 350, 200, 15),
-                 (1600, HEIGHT - 150, 400, 20)]
+                 (1600, HEIGHT -100, 200, 20)]
 
 
 

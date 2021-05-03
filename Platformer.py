@@ -3,6 +3,8 @@ import pygame as pg
 import random
 from PlatformerSettings import *
 from Sprites import *
+from os import path
+import time
 
 
 
@@ -16,6 +18,13 @@ class Game():
         self.clock = pg.time.Clock()
         self.gameRunning = True
         self.font_name = pg.font.match_font(FONT_NAME)
+        self.timer = 0
+        self.load_data()
+
+
+    def load_data(self):
+        # Loading data, graphis, sound, etc
+        pass
 
     def new(self):
         # Starting a new game
@@ -54,6 +63,8 @@ class Game():
                 self.player.pos.y = collision[0].rect.top
                 self.player.vel.y = 0
 
+
+        # Horizontal Scrolling
         if self.player.rect.right >= 2 * WIDTH / 3:
             self.player.pos.x -= max(abs(self.player.vel.x), 2)
             for plat in self.platforms:
@@ -62,6 +73,10 @@ class Game():
             self.player.pos.x += max(abs(self.player.vel.x), 2)
             for plat in self.platforms:
                 plat.rect.right += max(abs(self.player.vel.x), 2)
+
+
+
+
 
 
         # Game Over Condition
@@ -75,6 +90,7 @@ class Game():
         #restarts the game
         if len (self.platforms) == 0:
             self.playing = False
+
 
 
     def event(self):

@@ -2,6 +2,12 @@
 import pygame as pg
 from PlatformerSettings import*
 vec = pg.math.Vector2
+import time
+
+
+class SpriteSheet:
+    def __init__(self, filname):
+        pass
 
 
 class Player(pg.sprite.Sprite):
@@ -15,6 +21,10 @@ class Player(pg.sprite.Sprite):
         self.pos = vec(WIDTH-400, HEIGHT-250)
         self.vel = vec(0, 0) # Sets the velocity in the x y coordinates
         self.acc = vec(0, 0) # Sets the acceleration in the xy coordinates
+        self.jumpenergy = 0
+        self.canjump = True
+        self.onground = True
+
 
 
     def jump(self):
@@ -24,12 +34,20 @@ class Player(pg.sprite.Sprite):
         collision = pg.sprite.spritecollide(self, self.game.platforms, False)
         self.rect.x -= 1
 
+        if collision:
+            self.onground = True
+        if not collision:
+            self.onground = False
+
+
+
+
     # After the player jumps they will be able to float for a limited amount of time before descending
 
 
-
-
     def update(self):
+
+
         self.acc = vec(0, PLAYER_ASCENDING)
         keys = pg.key.get_pressed()
 
@@ -39,10 +57,21 @@ class Player(pg.sprite.Sprite):
         if keys[pg.K_RIGHT]:
             self.acc.x = PLAYER_HOR_ACC
 
-        if keys[pg.K_SPACE]:
+
+        if keys[pg.K_SPACE] and self.jumpenergy < 30 and self.canjump:
             self.acc.y = -PLAYER_ASCENDING
+            self.jumpenergy += 1
+
+        if self.jumpenergy == 30:
+            self.canjump = False
+
+        if self.jumpenergy == 0 and self.canjump == False:
+            self.jumpenergy = 0
+            self.canjump = True
+
         if not keys[pg.K_SPACE]:
-            self.acc.y = PLAYER_ASCENDING * 5
+            self.acc.y = PLAYER_ASCENDING * 1
+            self.jumpenergy -= 0.5
 
         # Friction applied to the player while they are moving horizontally
         self.acc.x += self.vel.x * PLAYER_FRICTION
@@ -71,3 +100,6 @@ class Platforms(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+
+
+
