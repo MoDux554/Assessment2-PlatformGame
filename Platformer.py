@@ -24,16 +24,14 @@ class Game():
 
 
     def load_data(self):
-        pass
-        #self.dir = path.dirname(__file__)
-        #img_dir = open(path.join(self.dir, 'images'))
-        #with open(path.join(self.dir, HIGHSCORE_FILE), 'r') as f:
-            #try:
-                # When there is something in the file
-                #self.highscore = int(f.read())
-            #except:
-                # When there's nothing in the file
-                #self.highscore = 0
+        self.dir = path.dirname(__file__)
+
+
+        # Load sounds and music
+        self.sound_dir = path.join(self.dir, 'sound')
+        self.boost_sound = pg.mixer.Sound(path.join(self.sound_dir, 'booster.wav'))
+
+
 
 
 
@@ -45,10 +43,11 @@ class Game():
         self.h_airboosters = pg.sprite.Group()
         self.v_airboosters = pg.sprite.Group()
         self.v2_airboosters = pg.sprite.Group()
-        self.goal =pg.sprite.Group()
+        self.goal = pg.sprite.Group()
         # Creating a new player sprite from the sprites file
         self.player = Player(self)
         self.all_sprites.add(self.player)
+
 
 
         # Adds the platforms from the list in Platformer Settings
@@ -82,16 +81,21 @@ class Game():
             goalend = V2Booster(*g)
             self.all_sprites.add(goalend)
             self.goal.add(goalend)
+        pg.mixer.music.load(path.join(self.sound_dir, 'LostImpact.wav'))
+
         self.run()
 
     def run(self):
         # when the game is running/game loop
+        #loop the music
+        pg.mixer.music.play(loops=-1)
         self.playing = True
         while self.playing:
             self.clock.tick(FPS)
             self.event()
             self.update()
             self.draw()
+        pg.mixer.music.fadeout(500)
 
     def update(self):
 
@@ -118,21 +122,25 @@ class Game():
                 self.playing = False
             if goal_collision:
                 # Stops the game and transitions to the Victory screen
-                self.victory_screen()
                 self.levelComplete = True
+                self.victory_screen()
+
             if h_booster_collision:
+                self.boost_sound.play()
                 self.player.vel.x += 16
                 self.player.vel.y -= 2.5
                 if self.player.vel.x == 48:
                     self.player.vel.x = 0
             # Propels the player downwards
             if v_booster_collision:
+                self.boost_sound.play()
                 self.player.vel.y += 8
                 self.player.vel.x = 0
                 if self.player.vel.y == 16:
                     self.player.vel.y = 0
             # Propels the player upwards
             if v2_booster_collision:
+                self.boost_sound.play()
                 self.player.vel.y -= 16
                 self.player.vel.x = 0
                 if self.player.vel.y == -32:
@@ -228,7 +236,7 @@ class Game():
 
     def victory_screen(self):
         # Prevents the death screen from interfering
-        if self.levelComplete and not self.gameRunning:
+        if self.levelComplete and self.gameRunning:
             return
         self.screen.fill(GREY)
         self.drawtext("LEVEL COMPLETE!", 48, WHITE, WIDTH / 2, HEIGHT / 4)
@@ -264,7 +272,7 @@ game.game_start_screen()
 while game.gameRunning:
     game.new()
     game.gameover_screen()
-    if game.levelComplete:
+    if game.victory_screen():
         game.victory_screen()
 pg.quit()
 
