@@ -1,12 +1,12 @@
 # Settings for the game like dimensions and colour
-TITLE = "BalloonPlatform"
+TITLE = "Balloon"
 WIDTH = 1280
 HEIGHT = 720
 FPS = 60
 FONT_NAME = 'arial'
-HIGHSCORE_FILE = 'highscore.txt'
 
-SPRITES = "spritesheet_jumper.png"
+
+
 
 
 # Player Properties
@@ -17,7 +17,7 @@ PLAYER_FRICTION = -0.1
 
 
 
-# Starting Platforms / List of Platforms
+# List of Platforms and other objects in the level
 NORMAL_PLATFORM_LIST = [(0, HEIGHT - 60, 150, 40),
                  (250, HEIGHT -200, 200, 15),
                  (700, HEIGHT - 250, 200, 15),
@@ -32,8 +32,8 @@ NORMAL_PLATFORM_LIST = [(0, HEIGHT - 60, 150, 40),
                  (4600, HEIGHT - 150,100, 20),
                  (4800, HEIGHT - 150,100, 20),
                  (5100, HEIGHT - 150,100, 20),
-                 (5400, HEIGHT - 150,100, 20)]
-
+                 (5400, HEIGHT - 150,100, 20),
+                 (6400, HEIGHT - 150, 100, 20)]
 
 
 BAD_PLATFORM_LIST = [(460, HEIGHT-300, 60, 20),
@@ -42,7 +42,12 @@ BAD_PLATFORM_LIST = [(460, HEIGHT-300, 60, 20),
                     (1450, HEIGHT-275, 200, 20),
                     (1815, HEIGHT - 300, 60, 250),
                     (2120, HEIGHT - 500, 60, 250),
-                     (4150, HEIGHT - 150, 200,20)]
+                     (4150, HEIGHT - 150, 200,20),
+                     (6600, HEIGHT - 150, 700, 20),
+                     (6600, HEIGHT - 270, 700, 20),
+                     (7400, HEIGHT - 700,60, 200 ),
+                     (7400, HEIGHT - 400, 60, 200)]
+
 
 
 
@@ -53,11 +58,15 @@ HBOOSTER_PLACEMENTS = [(2500,HEIGHT - 550, 20, 20),
                        (3800, HEIGHT - 300, 20, 20),
                        (4750,  HEIGHT - 150, 20, 20),
                        (5000, HEIGHT - 150, 20, 20),
-                       (5300, HEIGHT - 150, 20, 20)]
+                       (5300, HEIGHT - 150, 20, 20),
+                       (5400, HEIGHT - 300, 20, 20),
+                       (5700, HEIGHT - 300, 20, 20)]
 
 VBOOSTER_PLACEMENTS =[(4200, HEIGHT - 300, 20, 20)]
 
-V2BOOSTER_PLACEMENTS =  [(5400, HEIGHT - 150,20, 20)]
+V2BOOSTER_PLACEMENTS = [(7350, HEIGHT - 150, 20, 20)]
+
+GOAL_PLACEMENT =    [(7600, HEIGHT - 300, 100, 20)]
 
 
 

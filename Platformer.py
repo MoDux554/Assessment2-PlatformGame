@@ -17,6 +17,7 @@ class Game():
         pg.display.set_caption(TITLE)
         self.clock = pg.time.Clock()
         self.gameRunning = True
+        self.levelComplete = False
         self.font_name = pg.font.match_font(FONT_NAME)
         self.timer = 0
         self.load_data()
@@ -38,13 +39,13 @@ class Game():
 
     def new(self):
         # Starting a new game
-        self.score = 0
         self.all_sprites = pg.sprite.Group()
         self.platforms = pg.sprite.Group()
         self.spikes = pg.sprite.Group()
         self.h_airboosters = pg.sprite.Group()
         self.v_airboosters = pg.sprite.Group()
         self.v2_airboosters = pg.sprite.Group()
+        self.goal =pg.sprite.Group()
         # Creating a new player sprite from the sprites file
         self.player = Player(self)
         self.all_sprites.add(self.player)
@@ -76,6 +77,11 @@ class Game():
             v2boost = V2Booster(*v2b)
             self.all_sprites.add(v2boost)
             self.v2_airboosters.add(v2boost)
+
+        for g in GOAL_PLACEMENT:
+            goalend = V2Booster(*g)
+            self.all_sprites.add(goalend)
+            self.goal.add(goalend)
         self.run()
 
     def run(self):
@@ -100,28 +106,36 @@ class Game():
             h_booster_collision = pg.sprite.spritecollide(self.player, self.h_airboosters, False)
             v_booster_collision = pg.sprite.spritecollide(self.player, self.v_airboosters, False)
             v2_booster_collision = pg.sprite.spritecollide(self.player, self.v2_airboosters, False)
+            goal_collision = pg.sprite.spritecollide(self.player, self.goal, False)
+
 
             if plat_collision:
                 # the player's y position will be set to the top part of the platform
                 self.player.pos.y = plat_collision[0].rect.top
                 self.player.vel.y = 0
             if bad_plat_collision:
-                # Transition to Game Over screen
+                # Stops the game and transitions to the Game over screen
                 self.playing = False
+            if goal_collision:
+                # Stops the game and transitions to the Victory screen
+                self.victory_screen()
+                self.levelComplete = True
             if h_booster_collision:
                 self.player.vel.x += 16
                 self.player.vel.y -= 2.5
                 if self.player.vel.x == 48:
                     self.player.vel.x = 0
+            # Propels the player downwards
             if v_booster_collision:
                 self.player.vel.y += 8
                 self.player.vel.x = 0
                 if self.player.vel.y == 16:
                     self.player.vel.y = 0
+            # Propels the player upwards
             if v2_booster_collision:
-                self.player.vel.y -= -8
+                self.player.vel.y -= 16
                 self.player.vel.x = 0
-                if self.player.vel.y == -16:
+                if self.player.vel.y == -32:
                     self.player.vel.y = 0
 
 
@@ -140,6 +154,8 @@ class Game():
                 vboosters.rect.right -= max(abs(self.player.vel.x), 2)
             for v2boosters in self.v2_airboosters:
                 v2boosters.rect.right -= max(abs(self.player.vel.x), 2)
+            for thegoal in self.goal:
+                thegoal.rect.right -= max(abs(self.player.vel.x), 2)
 
         if self.player.rect.left <= WIDTH - 300:
             self.player.pos.x += max(abs(self.player.vel.x), 2)
@@ -153,18 +169,20 @@ class Game():
                 vboosters.rect.right += max(abs(self.player.vel.x), 2)
             for v2boosters in self.v2_airboosters:
                 v2boosters.rect.right += max(abs(self.player.vel.x), 2)
+            for thegoal in self.goal:
+                thegoal.rect.right += max(abs(self.player.vel.x), 2)
 
 
 
-        # Game Over Condition
+        # Game over condition
         if self.player.rect.bottom > HEIGHT:
             for sprite in self.all_sprites:
                 # makes it look like the platforms are scrolling down
                 sprite.rect.y -= max(self.player.vel.y, 10)
-                #removes all the sprites
+                # Removes all the sprites
                 if sprite.rect.bottom < 0:
                     sprite.kill()
-        #restarts the game
+        # Restarts the game
         if len (self.platforms) == 0:
             self.playing = False
 
@@ -175,6 +193,8 @@ class Game():
             if event.type == pg.QUIT:
                 if self.playing:
                     self.playing = False
+                if self.levelComplete:
+                    self.playing = False
                 self.gameRunning = False  # stops the game running loop and ends the game
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_SPACE:
@@ -184,7 +204,6 @@ class Game():
         # drawing on the screen
         self.screen.fill(GREY)
         self.all_sprites.draw(self.screen)
-        self.drawtext(str(self.score), 22, WHITE, WIDTH /2, HEIGHT / 15)
         # This comes after drawing all the time
         pg.display.flip()
 
@@ -199,13 +218,23 @@ class Game():
 
     def gameover_screen(self):
         # Makes sure that when the the player quits the game, the window is closed and not going to either screen.
-        if not self.gameRunning:
+        if not self.gameRunning and not self.levelComplete:
             return
         self.screen.fill(GREY)
         self.drawtext("GAME OVER", 48, WHITE, WIDTH / 2, HEIGHT / 4)
         self.drawtext("Press any key to restart.", 22, WHITE, WIDTH / 2, HEIGHT * 3 / 4)
         pg.display.flip()
         self.waitforinput()
+
+    def victory_screen(self):
+        # Prevents the death screen from interfering
+        if self.levelComplete and not self.gameRunning:
+            return
+        self.screen.fill(GREY)
+        self.drawtext("LEVEL COMPLETE!", 48, WHITE, WIDTH / 2, HEIGHT / 4)
+        self.drawtext("Please close the window to restart the game from the beginning.", 22, WHITE, WIDTH / 2, HEIGHT * 3 / 4)
+        pg.display.flip()
+
 
 
     def waitforinput(self):
@@ -235,5 +264,7 @@ game.game_start_screen()
 while game.gameRunning:
     game.new()
     game.gameover_screen()
+    if game.levelComplete:
+        game.victory_screen()
 pg.quit()
 

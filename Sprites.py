@@ -54,11 +54,11 @@ class Player(pg.sprite.Sprite):
             self.acc.x = PLAYER_HOR_ACC
 
 
-        if keys[pg.K_SPACE] and self.jumpenergy < 15 and self.canjump:
+        if keys[pg.K_SPACE] and self.jumpenergy < 100 and self.canjump:
             self.acc.y = -PLAYER_ASCENDING
-            self.jumpenergy += 1
+            self.jumpenergy += 5
 
-        if self.jumpenergy == 15:
+        if self.jumpenergy == 100:
             self.canjump = False
 
         if self.jumpenergy == 0 and self.canjump == False:
@@ -67,7 +67,7 @@ class Player(pg.sprite.Sprite):
 
         if not keys[pg.K_SPACE]:
             self.acc.y = PLAYER_ASCENDING * 1
-            self.jumpenergy -= 0.5
+            self.jumpenergy -= 2
 
         # Friction applied to the player while they are moving horizontally
         self.acc.x += self.vel.x * PLAYER_FRICTION
@@ -129,6 +129,15 @@ class V2Booster(pg.sprite.Sprite):
         pg.sprite.Sprite.__init__(self)
         self.image = pg.Surface((width, height))
         self.image.fill(GREEN)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
+class Goal(pg.sprite.Sprite):
+    def __init__(self, x, y, width, height):
+        pg.sprite.Sprite.__init__(self)
+        self.image = pg.Surface((width, height))
+        self.image.fill(WHITE)
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
